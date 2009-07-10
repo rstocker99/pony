@@ -8,7 +8,6 @@ Gem::Specification.new do |s|
   s.authors = ["Hiroshi Saito"]
   s.date = %q{2009-07-10}
   s.description = %q{adamwiggins/pony + file attachment (without GAE) + TLS.}
-  s.summary = s.description
   s.email = %q{HiroshiSaito@gmail.com}
   s.files = ["README.rdoc", "Rakefile", "lib/pony.rb", "pony.gemspec", "spec/base.rb", "spec/pony_spec.rb"]
   s.has_rdoc = false
@@ -16,4 +15,5 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--inline-source", "--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.1}
+  s.summary = s.description
 end
