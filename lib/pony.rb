@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'net/smtp'
+require 'base64'
 begin
 	require 'tmail'
 rescue LoadError
@@ -28,6 +29,14 @@ module Pony
 		mail.from = options[:from] || 'pony@unknown'
 		mail.subject = options[:subject]
 		mail.body = options[:body] || ""
+		(options[:attachments] || []).each do |name, body|
+			attachment = TMail::Mail.new
+			attachment.transfer_encoding = "base64"
+			attachment.body = Base64.encode64(body)
+			# attachment.set_content_type # TODO: if necessary
+			attachment.set_content_disposition "attachment", "filename" => name
+			mail.parts.push attachment
+		end
 		mail
 	end
 

@@ -43,6 +43,17 @@ describe Pony do
 		it "body" do
 			Pony.build_tmail(:body => 'What do you know, Joe?').body.should == 'What do you know, Joe?'
 		end
+
+		it "attachments" do
+			tmail = Pony.build_tmail(:attachments => {"foo.txt" => "content of foo.txt"})
+			tmail.should have(1).parts
+			tmail.parts.first.to_s.should == <<-PART
+Content-Transfer-Encoding: Base64
+Content-Disposition: attachment; filename=foo.txt
+
+Y29udGVudCBvZiBmb28udHh0
+			 PART
+		end
 	end
 
 	describe "transport" do
