@@ -96,6 +96,12 @@ Y29udGVudCBvZiBmb28udHh0
 				Pony.transport_via_smtp(mock('tmail', :to => 'to', :from => 'from', :to_s => 'message'), o)
 			end
 
+			it "enable starttls when tls option is true" do
+				o = { :smtp => { :user => 'user', :password => 'password', :auth => 'plain', :tls => true}}
+				@smtp.should_receive(:enable_starttls)
+				Pony.transport_via_smtp(mock('tmail', :to => 'to', :from => 'from', :to_s => 'message'), o)
+			end
+
 			it "starts the job" do
 				@smtp.should_receive(:start)
 				Pony.transport_via_smtp(mock('tmail', :to => 'to', :from => 'from', :to_s => 'message'))
