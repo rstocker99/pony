@@ -43,6 +43,10 @@ describe Pony do
 		it "body" do
 			Pony.build_tmail(:body => 'What do you know, Joe?').body.should == 'What do you know, Joe?'
 		end
+
+    it "content_type" do
+			Pony.build_tmail(:content_type => 'text/html').content_type.should == 'text/html'
+    end
 	end
 
 	describe "transport" do
