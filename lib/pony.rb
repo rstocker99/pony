@@ -51,7 +51,6 @@ module Pony
       mail.content_type = options[:content_type] || "text/plain"
       mail.body = options[:body] || ""
     end
-    puts mail
 		mail
 	end
 
