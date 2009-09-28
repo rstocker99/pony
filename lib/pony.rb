@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'net/smtp'
+require 'mime/types'
 begin
 	require 'smtp_tls'
 rescue LoadError
@@ -43,7 +44,8 @@ module Pony
         attachment = TMail::Mail.new
         attachment.transfer_encoding = "base64"
         attachment.body = Base64.encode64(body)
-        # attachment.set_content_type # TODO: if necessary
+        content_type = MIME::Types.type_for(name)
+        attachment.content_type = content_type unless content_type == ""
         attachment.set_content_disposition "attachment", "filename" => name
         mail.parts.push attachment
       end
