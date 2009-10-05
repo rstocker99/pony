@@ -32,6 +32,7 @@ module Pony
 		mail = TMail::Mail.new
 		mail.to = options[:to]
 		mail.from = options[:from] || 'pony@unknown'
+    mail.cc = options[:cc] || ''
 		mail.subject = options[:subject]
     if options[:attachments]
       # If message has attachment, then body must be sent as a message part
@@ -44,7 +45,7 @@ module Pony
         attachment = TMail::Mail.new
         attachment.transfer_encoding = "base64"
         attachment.body = Base64.encode64(body)
-        content_type = MIME::Types.type_for(name)
+        content_type = MIME::Types.type_for(name).to_s
         attachment.content_type = content_type unless content_type == ""
         attachment.set_content_disposition "attachment", "filename" => name
         mail.parts.push attachment
