@@ -31,8 +31,8 @@ module Pony
 	def self.build_tmail(options)
 		mail = TMail::Mail.new
 		mail.to = options[:to]
-		mail.from = options[:from] || 'pony@unknown'
     mail.cc = options[:cc] || ''
+		mail.from = options[:from] || 'pony@unknown'
 		mail.subject = options[:subject]
     if options[:attachments]
       # If message has attachment, then body must be sent as a message part
@@ -58,7 +58,7 @@ module Pony
 	end
 
 	def self.sendmail_binary
-		@sendmail_binary ||= `which sendmail`.chomp
+		@sendmail_binary ||= `which sendmail`.chomp + " -t"
 	end
 
 	def self.transport(tmail)
@@ -78,7 +78,7 @@ module Pony
 			if pipe
 				pipe.write(tmail.to_s)
 			else
-				exec(sendmail_binary, *tmail.to)
+				exec(sendmail_binary)
 			end
 		end
 	end
