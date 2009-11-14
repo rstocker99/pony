@@ -29,7 +29,7 @@ require 'rake/clean'
 require 'rake/gempackagetask'
 require 'fileutils'
 
-version = "0.3"
+version = "0.4"
 name = "pony"
 
 spec = Gem::Specification.new do |s|
@@ -37,9 +37,9 @@ spec = Gem::Specification.new do |s|
 	s.version = version
 	s.summary = "Send email in one command: Pony.mail(:to => 'someone@example.com', :body => 'hello')"
 	s.description = "Send email in one command: Pony.mail(:to => 'someone@example.com', :body => 'hello')"
-	s.author = "Adam Wiggins"
-	s.email = "adam@heroku.com"
-	s.homepage = "http://github.com/adamwiggins/pony"
+	s.author = "Adam Wiggins, maint: Ben Prew"
+	s.email = "ben.prew@gmail.com"
+	s.homepage = "http://github.com/benprew/pony"
 	s.rubyforge_project = "pony"
 
 	s.platform = Gem::Platform::RUBY

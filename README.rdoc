@@ -54,12 +54,14 @@ You can attach a file or two with the :attachments option:
 
 == Meta
 
+Maintained by Ben Prew
+
 Written by Adam Wiggins
 
 Patches contributed by: Mathieu Martin, Arun Thampi, Thomas Hurst, Stephen
-Celis, Othmane Benkirane, and Neil Mock
+Celis, Othmane Benkirane, Neil Mock, and Hiroshi Saito
 
 Released under the MIT License: http://www.opensource.org/licenses/mit-license.php
 
-http://github.com/adamwiggins/pony
+http://github.com/benprew/pony
 
