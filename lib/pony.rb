@@ -1,6 +1,11 @@
 require 'rubygems'
 require 'net/smtp'
 begin
+	require 'smtp_tls'
+rescue LoadError
+end
+require 'base64'
+begin
 	require 'tmail'
 rescue LoadError
 	require 'actionmailer'
@@ -29,6 +34,14 @@ module Pony
 		mail.from = options[:from] || 'pony@unknown'
 		mail.subject = options[:subject]
 		mail.body = options[:body] || ""
+		(options[:attachments] || []).each do |name, body|
+			attachment = TMail::Mail.new
+			attachment.transfer_encoding = "base64"
+			attachment.body = Base64.encode64(body)
+			# attachment.set_content_type # TODO: if necessary
+			attachment.set_content_disposition "attachment", "filename" => name
+			mail.parts.push attachment
+		end
 		mail
 	end
 
@@ -62,6 +75,10 @@ module Pony
 		default_options = {:smtp => { :host => 'localhost', :port => '25', :domain => 'localhost.localdomain' }}
 		o = default_options[:smtp].merge(options[:smtp])
 		smtp = Net::SMTP.new(o[:host], o[:port])
+		if o[:tls]
+			raise "You may need: gem install smtp_tls" unless smtp.respond_to?(:enable_starttls)
+			smtp.enable_starttls
+		end
 		if o.include?(:auth)
 			smtp.start(o[:domain], o[:user], o[:password], o[:auth])
 		else

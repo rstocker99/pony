@@ -44,9 +44,20 @@ describe Pony do
 			Pony.build_tmail(:body => 'What do you know, Joe?').body.should == 'What do you know, Joe?'
 		end
 
-    it "content_type" do
+		it "content_type" do
 			Pony.build_tmail(:content_type => 'text/html').content_type.should == 'text/html'
-    end
+		end
+
+		it "attachments" do
+			tmail = Pony.build_tmail(:attachments => {"foo.txt" => "content of foo.txt"})
+			tmail.should have(1).parts
+			tmail.parts.first.to_s.should == <<-PART
+Content-Transfer-Encoding: Base64
+Content-Disposition: attachment; filename=foo.txt
+
+Y29udGVudCBvZiBmb28udHh0
+			 PART
+		end
 	end
 
 	describe "transport" do
@@ -86,6 +97,12 @@ describe Pony do
 			it "uses SMTP authorization when auth key is provided" do
 				o = { :smtp => { :user => 'user', :password => 'password', :auth => 'plain'}}
 				@smtp.should_receive(:start).with('localhost.localdomain', 'user', 'password', 'plain')
+				Pony.transport_via_smtp(mock('tmail', :to => 'to', :from => 'from', :to_s => 'message'), o)
+			end
+
+			it "enable starttls when tls option is true" do
+				o = { :smtp => { :user => 'user', :password => 'password', :auth => 'plain', :tls => true}}
+				@smtp.should_receive(:enable_starttls)
 				Pony.transport_via_smtp(mock('tmail', :to => 'to', :from => 'from', :to_s => 'message'), o)
 			end
 
