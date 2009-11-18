@@ -59,7 +59,7 @@ module Pony
 	end
 
 	def self.sendmail_binary
-		@sendmail_binary ||= `which sendmail`.chomp + " -t"
+		@sendmail_binary ||= `which sendmail`.chomp
 	end
 
 	def self.transport(tmail)
@@ -79,7 +79,7 @@ module Pony
 			if pipe
 				pipe.write(tmail.to_s)
 			else
-				exec(sendmail_binary)
+				exec(sendmail_binary, "-t")
 			end
 		end
 	end
