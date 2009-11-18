@@ -16,4 +16,6 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.1}
   s.summary = s.description
+  s.add_dependency('tmail', '>= 1.2.3')
+  s.add_dependency('mime-types', '>= 1.16')
 end

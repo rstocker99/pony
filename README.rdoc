@@ -6,9 +6,9 @@ Ruby no longer has to be jealous of PHP's mail() function, which can send an ema
 
   Pony.mail(:to => 'you@example.com', :from => 'me@example.com', :subject => 'hi', :body => 'Hello there.')
   Pony.mail(:to => 'you@example.com', :from => 'me@example.com', :subject => 'hi', :body => '<h1>Hello there!</h1>', :content_type => 'text/html')
+  Pony.mail(:to => 'you@example.com', :cc => 'him@example.com', :from => 'me@example.com', :subject => 'hi', :body => 'Howdy')
 
 Any option key may be omitted except for :to.
-
 
 
 == Transport
@@ -52,6 +52,8 @@ You can attach a file or two with the :attachments option:
 
   Pony.mail(..., :attachments => {"foo.zip" => File.read("path/to/foo.zip"), "hello.txt" => "hello!"})
 
+An attachment's mime-type is set based on the filename (as dictated by the ruby gem mime-types).  So 'foo.pdf' has a mime-type of 'application/pdf'
+
 == Meta
 
 Maintained by Ben Prew
@@ -59,9 +61,19 @@ Maintained by Ben Prew
 Written by Adam Wiggins
 
 Patches contributed by: Mathieu Martin, Arun Thampi, Thomas Hurst, Stephen
-Celis, Othmane Benkirane, Neil Mock, and Hiroshi Saito
+Celis, Othmane Benkirane, Neil Mock, Hiroshi Saito, and Nickolas Means
 
 Released under the MIT License: http://www.opensource.org/licenses/mit-license.php
 
 http://github.com/benprew/pony
+
+== Releases
+
+0.4.1
+* Add :cc capability
+* fix bug: resolve body not displaying when attachments sent
+
+0.4
+* Implemented file attachments option
+* use TLS if :tls => true
 

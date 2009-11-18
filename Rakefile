@@ -48,6 +48,7 @@ spec = Gem::Specification.new do |s|
 	s.files = %w(Rakefile) + Dir.glob("{lib,spec}/**/*")
 
 	s.require_path = "lib"
+	s.add_dependency('mime-types', '>= 1.16')
 	s.add_dependency( 'tmail', '~> 1.0' )
 end
 

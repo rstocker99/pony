@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'net/smtp'
+require 'mime/types'
 begin
 	require 'smtp_tls'
 rescue LoadError
@@ -31,22 +32,34 @@ module Pony
 		mail = TMail::Mail.new
 		mail.content_type = options[:content_type] if options[:content_type]
 		mail.to = options[:to]
+		mail.cc = options[:cc] || ''
 		mail.from = options[:from] || 'pony@unknown'
 		mail.subject = options[:subject]
-		mail.body = options[:body] || ""
-		(options[:attachments] || []).each do |name, body|
-			attachment = TMail::Mail.new
-			attachment.transfer_encoding = "base64"
-			attachment.body = Base64.encode64(body)
-			# attachment.set_content_type # TODO: if necessary
-			attachment.set_content_disposition "attachment", "filename" => name
-			mail.parts.push attachment
+		if options[:attachments]
+			# If message has attachment, then body must be sent as a message part
+			# or it will not be interpreted correctly by client.
+			body = TMail::Mail.new
+			body.body = options[:body] || ""
+			body.content_type = options[:content_type] || "text/plain"
+			mail.parts.push body
+			(options[:attachments] || []).each do |name, body|
+				attachment = TMail::Mail.new
+				attachment.transfer_encoding = "base64"
+				attachment.body = Base64.encode64(body)
+				content_type = MIME::Types.type_for(name).to_s
+				attachment.content_type = content_type unless content_type == ""
+				attachment.set_content_disposition "attachment", "filename" => name
+				mail.parts.push attachment
+			end
+		else
+			mail.content_type = options[:content_type] || "text/plain"
+			mail.body = options[:body] || ""
 		end
 		mail
 	end
 
 	def self.sendmail_binary
-		@sendmail_binary ||= `which sendmail`.chomp
+		@sendmail_binary ||= `which sendmail`.chomp + " -t"
 	end
 
 	def self.transport(tmail)
@@ -66,7 +79,7 @@ module Pony
 			if pipe
 				pipe.write(tmail.to_s)
 			else
-				exec(sendmail_binary, *tmail.to)
+				exec(sendmail_binary)
 			end
 		end
 	end

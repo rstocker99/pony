@@ -28,6 +28,10 @@ describe Pony do
 			Pony.build_tmail(:to => 'joe@example.com').to.should == [ 'joe@example.com' ]
 		end
 
+		it "cc" do
+			Pony.build_tmail(:cc => 'joe@example.com').cc.should == [ 'joe@example.com' ]
+		end
+
 		it "from" do
 			Pony.build_tmail(:from => 'joe@example.com').from.should == [ 'joe@example.com' ]
 		end
@@ -50,12 +54,27 @@ describe Pony do
 
 		it "attachments" do
 			tmail = Pony.build_tmail(:attachments => {"foo.txt" => "content of foo.txt"})
-			tmail.should have(1).parts
-			tmail.parts.first.to_s.should == <<-PART
+			tmail.should have(2).parts
+			tmail.parts.first.to_s.should == "Content-Type: text/plain\n\n"
+			tmail.parts.last.to_s.should == <<-PART
+Content-Type: text/plain
 Content-Transfer-Encoding: Base64
 Content-Disposition: attachment; filename=foo.txt
 
 Y29udGVudCBvZiBmb28udHh0
+			 PART
+		end
+
+		it "suggests mime-type" do
+			tmail = Pony.build_tmail(:attachments => {"foo.pdf" => "content of foo.pdf"})
+			tmail.should have(2).parts
+			tmail.parts.first.to_s.should == "Content-Type: text/plain\n\n"
+			tmail.parts.last.to_s.should == <<-PART
+Content-Type: application/pdf
+Content-Transfer-Encoding: Base64
+Content-Disposition: attachment; filename=foo.pdf
+
+Y29udGVudCBvZiBmb28ucGRm
 			 PART
 		end
 	end
