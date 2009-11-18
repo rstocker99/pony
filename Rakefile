@@ -29,30 +29,7 @@ require 'rake/clean'
 require 'rake/gempackagetask'
 require 'fileutils'
 
-version = "0.4.1"
-name = "pony"
-
-spec = Gem::Specification.new do |s|
-	s.name = name
-	s.version = version
-	s.summary = "Send email in one command: Pony.mail(:to => 'someone@example.com', :body => 'hello')"
-	s.description = "Send email in one command: Pony.mail(:to => 'someone@example.com', :body => 'hello')"
-	s.author = "Adam Wiggins, maint: Ben Prew"
-	s.email = "ben.prew@gmail.com"
-	s.homepage = "http://github.com/benprew/pony"
-	s.rubyforge_project = "pony"
-
-	s.platform = Gem::Platform::RUBY
-	s.has_rdoc = false
-
-	s.files = %w(Rakefile) + Dir.glob("{lib,spec}/**/*")
-
-	s.require_path = "lib"
-	s.add_dependency('mime-types', '>= 1.16')
-	s.add_dependency( 'tmail', '~> 1.0' )
-end
-
-Rake::GemPackageTask.new(spec) do |p|
+Rake::GemPackageTask.new(eval File.read('pony.gemspec')) do |p|
 	p.need_tar = true if RUBY_PLATFORM !~ /mswin/
 end
 
