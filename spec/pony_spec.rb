@@ -159,4 +159,11 @@ Y29udGVudCBvZiBmb28ucGRm
 		end
 	end
 
+	describe "sendmail binary location" do
+		it "should default to /usr/sbin/sendmail if not in path" do
+			Pony.stub!(:'`').and_return('')
+			Pony.sendmail_binary.should == '/usr/sbin/sendmail'
+		end
+	end
+
 end

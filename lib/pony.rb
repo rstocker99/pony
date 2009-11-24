@@ -59,7 +59,8 @@ module Pony
 	end
 
 	def self.sendmail_binary
-		@sendmail_binary ||= `which sendmail`.chomp
+		sendmail = `which sendmail`.chomp
+		sendmail.empty? ? '/usr/sbin/sendmail' : sendmail
 	end
 
 	def self.transport(tmail)
