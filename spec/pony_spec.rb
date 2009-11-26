@@ -36,6 +36,19 @@ describe Pony do
 			Pony.build_tmail(:from => 'joe@example.com').from.should == [ 'joe@example.com' ]
 		end
 
+		it "bcc" do
+			Pony.build_tmail(:bcc => 'joe@example.com').bcc.should == [ 'joe@example.com' ]
+		end
+
+		it "charset" do
+			Pony.build_tmail(:charset => 'UTF-8').charset.should == 'UTF-8'
+		end
+
+		it "default charset" do
+			Pony.build_tmail(:body => 'body').charset.should == nil
+			Pony.build_tmail(:body => 'body', :content_type => 'text/html').charset.should == nil
+		end
+
 		it "from (default)" do
 			Pony.build_tmail({}).from.should == [ 'pony@unknown' ]
 		end

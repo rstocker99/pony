@@ -5,10 +5,10 @@
 Ruby no longer has to be jealous of PHP's mail() function, which can send an email in a single command.
 
   Pony.mail(:to => 'you@example.com', :from => 'me@example.com', :subject => 'hi', :body => 'Hello there.')
-  Pony.mail(:to => 'you@example.com', :from => 'me@example.com', :subject => 'hi', :body => '<h1>Hello there!</h1>', :content_type => 'text/html')
+  Pony.mail(:to => 'you@example.com', :body => '<h1>Hello there!</h1>', :content_type => 'text/html')
   Pony.mail(:to => 'you@example.com', :cc => 'him@example.com', :from => 'me@example.com', :subject => 'hi', :body => 'Howdy')
 
-Any option key may be omitted except for :to.
+Any option key may be omitted except for :to. For a complete list of options, see List Of Options section below.
 
 
 == Transport
@@ -52,7 +52,24 @@ You can attach a file or two with the :attachments option:
 
   Pony.mail(..., :attachments => {"foo.zip" => File.read("path/to/foo.zip"), "hello.txt" => "hello!"})
 
-An attachment's mime-type is set based on the filename (as dictated by the ruby gem mime-types).  So 'foo.pdf' has a mime-type of 'application/pdf'
+Note: An attachment's mime-type is set based on the filename (as dictated by the ruby gem mime-types).  So 'foo.pdf' has a mime-type of 'application/pdf'
+
+== List Of Options
+
+Options passed pretty much directly to Tmail
+ content_type
+ to
+ cc
+ bcc
+ from
+ subject
+ charset
+ attachments # see Attachments section above
+
+Other options
+ via # :smtp or :sendmail, see Transport section above
+ smtp # specify smtp info, see Transport section above
+ tls # use tls, see TLS/SSL section above
 
 == Meta
 
@@ -61,11 +78,13 @@ Maintained by Ben Prew
 Written by Adam Wiggins
 
 Patches contributed by: Mathieu Martin, Arun Thampi, Thomas Hurst, Stephen
-Celis, Othmane Benkirane, Neil Mock, Hiroshi Saito, and Nickolas Means
+Celis, Othmane Benkirane, Neil Mock, Hiroshi Saito, Jesse Cooke, and Nickolas Means
 
 Released under the MIT License: http://www.opensource.org/licenses/mit-license.php
 
-http://github.com/benprew/pony
+homepage: http://github.com/benprew/pony
+mailing list: ponyrb@googlegroups.com
+
 
 == Releases
 

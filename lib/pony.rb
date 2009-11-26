@@ -30,9 +30,9 @@ module Pony
 
 	def self.build_tmail(options)
 		mail = TMail::Mail.new
-		mail.content_type = options[:content_type] if options[:content_type]
 		mail.to = options[:to]
 		mail.cc = options[:cc] || ''
+		mail.bcc = options[:bcc] || ''
 		mail.from = options[:from] || 'pony@unknown'
 		mail.subject = options[:subject]
 		if options[:attachments]
@@ -55,6 +55,7 @@ module Pony
 			mail.content_type = options[:content_type] || "text/plain"
 			mail.body = options[:body] || ""
 		end
+		mail.charset = options[:charset] # charset must be set after setting content_type
 		mail
 	end
 
