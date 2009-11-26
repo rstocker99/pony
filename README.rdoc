@@ -69,6 +69,10 @@ http://github.com/benprew/pony
 
 == Releases
 
+0.5
+* default location of sendmail to /usr/sbin/sendmail if sendmail not in path
+* fix bug: README not showing password option (listed as pass)
+
 0.4.1
 * Add :cc capability
 * fix bug: resolve body not displaying when attachments sent
