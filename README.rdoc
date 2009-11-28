@@ -28,7 +28,7 @@ You can also specify options for SMTP:
     :port   => '25',
     :user   => 'user',
     :password   => 'password',
-    :auth   => :plain # :plain, :login, :cram_md5, no auth by default
+    :auth   => :plain, # :plain, :login, :cram_md5, no auth by default
     :domain => "localhost.localdomain" # the HELO domain provided by the client to the server
   }
 
@@ -42,7 +42,7 @@ With smtp transport it also possible to use TLS/SSL:
     :tls    => true,
     :user   => 'user',
     :password   => 'password',
-    :auth   => :plain # :plain, :login, :cram_md5, no auth by default
+    :auth   => :plain, # :plain, :login, :cram_md5, no auth by default
     :domain => "localhost.localdomain" # the HELO domain provided by the client to the server
   })
 
