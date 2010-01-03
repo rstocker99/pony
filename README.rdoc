@@ -88,6 +88,12 @@ mailing list: ponyrb@googlegroups.com
 
 == Releases
 
+0.6
+* Add :bcc capability
+* Add :charset capability
+* Add complete list of options to readme
+* fix bug: readme examples
+
 0.5
 * default location of sendmail to /usr/sbin/sendmail if sendmail not in path
 * fix bug: README not showing password option (listed as pass)
