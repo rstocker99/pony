@@ -71,6 +71,13 @@ Other options
  smtp # specify smtp info, see Transport section above
  tls # use tls, see TLS/SSL section above
 
+== External Dependencies
+
+tmail ~> 1.0
+mime-types >= 1.16
+
+Note: these requirements are specified in the gemspec as well.  Also, you may need smtp_tls if you want to send via tls and are using ruby < 1.8.7
+
 == Meta
 
 Maintained by Ben Prew
@@ -87,6 +94,9 @@ mailing list: ponyrb@googlegroups.com
 
 
 == Releases
+
+0.7
+* Pass :cc and :bcc options to sendmail appropriately
 
 0.6
 * Add :bcc capability

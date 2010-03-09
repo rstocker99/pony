@@ -121,36 +121,46 @@ Y29udGVudCBvZiBmb28ucGRm
 				Net::SMTP.stub!(:new).and_return(@smtp)
 			end
 
+      it "passes cc and bcc as the list of recipients" do
+        @smtp.should_receive(:send_message).with("message", 'from', ['to', 'cc', 'bcc'])
+				Pony.transport_via_smtp(mock('tmail', :to => 'to', :cc => 'cc', :from => 'from', :to_s => 'message', :bcc => 'bcc'))
+      end
+
+      it "only pass cc as the list of recipients" do
+        @smtp.should_receive(:send_message).with("message", 'from', ['to', 'cc' ])
+				Pony.transport_via_smtp(mock('tmail', :to => 'to', :cc => 'cc', :from => 'from', :to_s => 'message', :bcc => ''))
+      end
+
 			it "defaults to localhost as the SMTP server" do
 				Net::SMTP.should_receive(:new).with('localhost', '25').and_return(@smtp)
-				Pony.transport_via_smtp(mock('tmail', :to => 'to', :from => 'from', :to_s => 'message'))
+				Pony.transport_via_smtp(mock('tmail', :to => 'to', :from => 'from', :to_s => 'message', :cc => '', :bcc => ''))
 			end
 
 			it "uses SMTP authorization when auth key is provided" do
 				o = { :smtp => { :user => 'user', :password => 'password', :auth => 'plain'}}
 				@smtp.should_receive(:start).with('localhost.localdomain', 'user', 'password', 'plain')
-				Pony.transport_via_smtp(mock('tmail', :to => 'to', :from => 'from', :to_s => 'message'), o)
+				Pony.transport_via_smtp(mock('tmail', :to => 'to', :from => 'from', :to_s => 'message', :cc => '', :bcc => ''), o)
 			end
 
 			it "enable starttls when tls option is true" do
 				o = { :smtp => { :user => 'user', :password => 'password', :auth => 'plain', :tls => true}}
 				@smtp.should_receive(:enable_starttls)
-				Pony.transport_via_smtp(mock('tmail', :to => 'to', :from => 'from', :to_s => 'message'), o)
+				Pony.transport_via_smtp(mock('tmail', :to => 'to', :from => 'from', :to_s => 'message', :cc => '', :bcc => ''), o)
 			end
 
 			it "starts the job" do
 				@smtp.should_receive(:start)
-				Pony.transport_via_smtp(mock('tmail', :to => 'to', :from => 'from', :to_s => 'message'))
+				Pony.transport_via_smtp(mock('tmail', :to => 'to', :from => 'from', :to_s => 'message', :cc => '', :bcc => ''))
 			end
 
 			it "sends a tmail message" do
 				@smtp.should_receive(:send_message)
-				Pony.transport_via_smtp(mock('tmail', :to => 'to', :from => 'from', :to_s => 'message'))
+				Pony.transport_via_smtp(mock('tmail', :to => 'to', :from => 'from', :to_s => 'message', :cc => '', :bcc => ''))
 			end
 
 			it "finishes the job" do
 				@smtp.should_receive(:finish)
-				Pony.transport_via_smtp(mock('tmail', :to => 'to', :from => 'from', :to_s => 'message'))
+				Pony.transport_via_smtp(mock('tmail', :to => 'to', :from => 'from', :to_s => 'message', :cc => '', :bcc => ''))
 			end
 
 		end

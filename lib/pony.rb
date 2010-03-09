@@ -99,7 +99,7 @@ module Pony
 		else
 			smtp.start(o[:domain])
 		end
-		smtp.send_message tmail.to_s, tmail.from, tmail.to
+		smtp.send_message tmail.to_s, tmail.from, [ tmail.to, tmail.cc, tmail.bcc ].select { |i| i != '' }
 		smtp.finish
 	end
 end
