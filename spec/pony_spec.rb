@@ -124,6 +124,9 @@ Y29udGVudCBvZiBmb28ucGRm
       it "passes cc and bcc as the list of recipients" do
         @smtp.should_receive(:send_message).with("message", 'from', ['to', 'cc', 'bcc'])
 				Pony.transport_via_smtp(mock('tmail', :to => 'to', :cc => 'cc', :from => 'from', :to_s => 'message', :bcc => 'bcc'))
+
+        @smtp.should_receive(:send_message).with("message", 'from', ['to', 'cc'])
+				Pony.transport_via_smtp(mock('tmail', :to => 'to', :cc => 'cc', :from => 'from', :to_s => 'message', :bcc => nil))
       end
 
       it "only pass cc as the list of recipients" do

@@ -31,8 +31,8 @@ module Pony
 	def self.build_tmail(options)
 		mail = TMail::Mail.new
 		mail.to = options[:to]
-		mail.cc = options[:cc] || ''
-		mail.bcc = options[:bcc] || ''
+		mail.cc = options[:cc]
+		mail.bcc = options[:bcc]
 		mail.from = options[:from] || 'pony@unknown'
 		mail.subject = options[:subject]
 		if options[:attachments]
@@ -99,7 +99,7 @@ module Pony
 		else
 			smtp.start(o[:domain])
 		end
-		smtp.send_message tmail.to_s, tmail.from, [ tmail.to, tmail.cc, tmail.bcc ].select { |i| i != '' }
+		smtp.send_message tmail.to_s, tmail.from, [ tmail.to, tmail.cc, tmail.bcc ].select { |i| i && i != '' }
 		smtp.finish
 	end
 end
