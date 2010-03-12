@@ -27,9 +27,25 @@ describe Pony do
 		it "to" do
 			Pony.build_tmail(:to => 'joe@example.com').to.should == [ 'joe@example.com' ]
 		end
+		
+		it "to with multiple recipients" do
+			Pony.build_tmail(:to => 'joe@example.com, friedrich@example.com').to.should == [ 'joe@example.com', 'friedrich@example.com' ]
+		end
+		
+		it "to with multiple recipients and names" do
+			Pony.build_tmail(:to => 'joe@example.com, "Friedrich Hayek" <friedrich@example.com>').to.should == [ 'joe@example.com', 'friedrich@example.com' ]
+		end
+		
+		it "to with multiple recipients and names in an array" do
+			Pony.build_tmail(:to => ['joe@example.com', '"Friedrich Hayek" <friedrich@example.com>']).to.should == [ 'joe@example.com', 'friedrich@example.com' ]
+		end
 
 		it "cc" do
 			Pony.build_tmail(:cc => 'joe@example.com').cc.should == [ 'joe@example.com' ]
+		end
+		
+		it "cc with multiple recipients" do
+			Pony.build_tmail(:cc => 'joe@example.com, friedrich@example.com').cc.should == [ 'joe@example.com', 'friedrich@example.com' ]
 		end
 
 		it "from" do
@@ -38,6 +54,10 @@ describe Pony do
 
 		it "bcc" do
 			Pony.build_tmail(:bcc => 'joe@example.com').bcc.should == [ 'joe@example.com' ]
+		end
+
+    it "bcc with multiple recipients" do
+			Pony.build_tmail(:bcc => 'joe@example.com, friedrich@example.com').bcc.should == [ 'joe@example.com', 'friedrich@example.com' ]
 		end
 
 		it "charset" do
