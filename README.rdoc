@@ -95,6 +95,9 @@ mailing list: ponyrb@googlegroups.com
 
 == Releases
 
+0.9
+* merge in kalins fixes to use tmail.destinations instead of trying to parse tmail.to, tmail.cc and tmail.bcc.  New specs to test functionality
+
 0.8
 * Fix bug that was allowing nil :bcc and :cc options to be passed to smtp
 
