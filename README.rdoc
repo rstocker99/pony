@@ -95,6 +95,9 @@ mailing list: ponyrb@googlegroups.com
 
 == Releases
 
+0.8
+* Fix bug that was allowing nil :bcc and :cc options to be passed to smtp
+
 0.7
 * Pass :cc and :bcc options to sendmail appropriately
 
