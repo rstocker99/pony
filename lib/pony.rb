@@ -35,6 +35,7 @@ module Pony
 		mail.bcc = options[:bcc]
 		mail.from = options[:from] || 'pony@unknown'
 		mail.subject = options[:subject]
+		mail.message_id = options[:message_id]
 		if options[:attachments]
 			# If message has attachment, then body must be sent as a message part
 			# or it will not be interpreted correctly by client.

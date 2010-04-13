@@ -85,6 +85,10 @@ describe Pony do
 			Pony.build_tmail(:content_type => 'text/html').content_type.should == 'text/html'
 		end
 
+		it "message_id" do
+			Pony.build_tmail(:message_id => '<abc@def.com>').message_id.should == '<abc@def.com>'
+		end
+
 		it "attachments" do
 			tmail = Pony.build_tmail(:attachments => {"foo.txt" => "content of foo.txt"})
 			tmail.should have(2).parts
