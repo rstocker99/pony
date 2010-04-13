@@ -56,6 +56,9 @@ module Pony
 			mail.content_type = options[:content_type] || "text/plain"
 			mail.body = options[:body] || ""
 		end
+		(options[:headers] ||= {}).each do |key, value|
+			mail[key] = value
+		end
 		mail.charset = options[:charset] # charset must be set after setting content_type
 		mail
 	end
