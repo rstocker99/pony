@@ -56,7 +56,7 @@ describe Pony do
 			Pony.build_tmail(:bcc => 'joe@example.com').bcc.should == [ 'joe@example.com' ]
 		end
 
-    it "bcc with multiple recipients" do
+		it "bcc with multiple recipients" do
 			Pony.build_tmail(:bcc => 'joe@example.com, friedrich@example.com').bcc.should == [ 'joe@example.com', 'friedrich@example.com' ]
 		end
 
@@ -149,27 +149,27 @@ Y29udGVudCBvZiBmb28ucGRm
 				Net::SMTP.stub!(:new).and_return(@smtp)
 			end
 
-		it "passes cc and bcc as the list of recipients" do
-			@smtp.should_receive(:send_message).with("message", ['from'], ['to', 'cc', 'bcc'])
-			Pony.transport_via_smtp(mock('tmail', :to => ['to'], :cc => ['cc'], :from => ['from'], :to_s => 'message', :bcc => ['bcc'], :destinations => ['to', 'cc', 'bcc']))
-			@smtp.should_receive(:send_message).with("message", 'from', ['to', 'cc'])
-			Pony.transport_via_smtp(mock('tmail', :to => 'to', :cc => 'cc', :from => 'from', :to_s => 'message', :bcc => nil, :destinations => ['to', 'cc']))
-		end
+			it "passes cc and bcc as the list of recipients" do
+				@smtp.should_receive(:send_message).with("message", ['from'], ['to', 'cc', 'bcc'])
+				Pony.transport_via_smtp(mock('tmail', :to => ['to'], :cc => ['cc'], :from => ['from'], :to_s => 'message', :bcc => ['bcc'], :destinations => ['to', 'cc', 'bcc']))
+				@smtp.should_receive(:send_message).with("message", 'from', ['to', 'cc'])
+				Pony.transport_via_smtp(mock('tmail', :to => 'to', :cc => 'cc', :from => 'from', :to_s => 'message', :bcc => nil, :destinations => ['to', 'cc']))
+			end
 
-		it "only pass cc as the list of recipients" do
-			@smtp.should_receive(:send_message).with("message", ['from'], ['to', 'cc' ])
-				Pony.transport_via_smtp(mock('tmail', :to => ['to'], :cc => ['cc'], :from => ['from'], :to_s => 'message', :bcc => nil, :destinations => ['to', 'cc']))
-		end
+			it "only pass cc as the list of recipients" do
+				@smtp.should_receive(:send_message).with("message", ['from'], ['to', 'cc' ])
+					Pony.transport_via_smtp(mock('tmail', :to => ['to'], :cc => ['cc'], :from => ['from'], :to_s => 'message', :bcc => nil, :destinations => ['to', 'cc']))
+			end
 
-		it "only pass bcc as the list of recipients" do
-			@smtp.should_receive(:send_message).with("message", ['from'], ['to', 'bcc' ])
-				Pony.transport_via_smtp(mock('tmail', :to => ['to'], :cc => nil, :from => ['from'], :to_s => 'message', :bcc => ['bcc'], :destinations => ['to', 'bcc']))
-		end
+			it "only pass bcc as the list of recipients" do
+				@smtp.should_receive(:send_message).with("message", ['from'], ['to', 'bcc' ])
+					Pony.transport_via_smtp(mock('tmail', :to => ['to'], :cc => nil, :from => ['from'], :to_s => 'message', :bcc => ['bcc'], :destinations => ['to', 'bcc']))
+			end
 
-		it "passes cc and bcc as the list of recipients when there are a few of them" do
-			@smtp.should_receive(:send_message).with("message", ['from'], ['to', 'to2', 'cc', 'bcc', 'bcc2', 'bcc3'])
-				Pony.transport_via_smtp(mock('tmail', :to => ['to', 'to2'], :cc => ['cc'], :from => ['from'], :to_s => 'message', :bcc => ['bcc', 'bcc2', 'bcc3'], :destinations => ['to', 'to2', 'cc', 'bcc', 'bcc2', 'bcc3']))
-		end
+			it "passes cc and bcc as the list of recipients when there are a few of them" do
+				@smtp.should_receive(:send_message).with("message", ['from'], ['to', 'to2', 'cc', 'bcc', 'bcc2', 'bcc3'])
+					Pony.transport_via_smtp(mock('tmail', :to => ['to', 'to2'], :cc => ['cc'], :from => ['from'], :to_s => 'message', :bcc => ['bcc', 'bcc2', 'bcc3'], :destinations => ['to', 'to2', 'cc', 'bcc', 'bcc2', 'bcc3']))
+			end
 
 			it "defaults to localhost as the SMTP server" do
 				Net::SMTP.should_receive(:new).with('localhost', '25').and_return(@smtp)
