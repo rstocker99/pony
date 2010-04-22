@@ -5,8 +5,8 @@
 Ruby no longer has to be jealous of PHP's mail() function, which can send an email in a single command.
 
   Pony.mail(:to => 'you@example.com', :from => 'me@example.com', :subject => 'hi', :body => 'Hello there.')
-  Pony.mail(:to => 'you@example.com', :body => '<h1>Hello there!</h1>', :content_type => 'text/html')
-  Pony.mail(:to => 'you@example.com', :cc => 'him@example.com', :from => 'me@example.com', :subject => 'hi', :body => 'Howdy')
+  Pony.mail(:to => 'you@example.com', :html_body => '<h1>Hello there!</h1>', :body => "In case you can't read html, Hello there.")
+  Pony.mail(:to => 'you@example.com', :cc => 'him@example.com', :from => 'me@example.com', :subject => 'hi', :body => 'Howsit!')
 
 Any option key may be omitted except for :to. For a complete list of options, see List Of Options section below.
 
@@ -15,7 +15,7 @@ Any option key may be omitted except for :to. For a complete list of options, se
 
 Pony uses /usr/sbin/sendmail to send mail if it is available, otherwise it uses SMTP to localhost.
 
-This can be over-ridden if you specify a via option
+This can be over-ridden if you specify a via option:
 
   Pony.mail(:to => 'you@example.com', :via => :smtp) # sends via SMTP
   
@@ -23,28 +23,33 @@ This can be over-ridden if you specify a via option
 
 You can also specify options for SMTP:
 
-  Pony.mail(:to => 'you@example.com', :via => :smtp, :smtp => {
-    :host   => 'smtp.yourserver.com',
-    :port   => '25',
-    :user   => 'user',
-    :password   => 'password',
-    :auth   => :plain, # :plain, :login, :cram_md5, no auth by default
-    :domain => "localhost.localdomain" # the HELO domain provided by the client to the server
+  Pony.mail(:to => 'you@example.com', :via => :smtp, :via_options => {
+    :address        => 'smtp.yourserver.com',
+    :port           => '25',
+    :user_name      => 'user',
+    :password       => 'password',
+    :authentication => :plain, # :plain, :login, :cram_md5, no auth by default
+    :domain         => "localhost.localdomain" # the HELO domain provided by the client to the server
   }
 
-== TLS/SSL
+Gmail example (with TLS/SSL)
 
-With smtp transport it also possible to use TLS/SSL:
-
-  Pony.mail(:to => 'you@example.com', :via => :smtp, :smtp => {
-    :host   => 'smtp.gmail.com',
-    :port   => '587',
-    :tls    => true,
-    :user   => 'user',
-    :password   => 'password',
-    :auth   => :plain, # :plain, :login, :cram_md5, no auth by default
-    :domain => "localhost.localdomain" # the HELO domain provided by the client to the server
+  Pony.mail(:to => 'you@example.com', :via => :smtp, :via_options => {
+    :address              => 'smtp.gmail.com',
+    :port                 => '587',
+    :enable_starttls_auto => true,
+    :user_name            => 'user',
+    :password             => 'password',
+    :authentication       => :plain, # :plain, :login, :cram_md5, no auth by default
+    :domain               => "localhost.localdomain" # the HELO domain provided by the client to the server
   })
+
+And options for Sendmail:
+
+  Pony.mail(:to => 'you@example.com', :via => :smtp, :via_options => {
+    :location  => '/path/to/sendmail' # this defaults to 'which sendmail' or '/usr/sbin/sendmail' if 'which' fails
+    :arguments => '-t' # -t and -i are the defaults
+  }
 
 == Attachments
 
@@ -62,32 +67,34 @@ Pony allows you to specify custom mail headers
     :headers => { "List-ID" => "...", "X-My-Custom-Header" => "what a cool custom header" }
   )
 
-
 == List Of Options
 
-Options passed pretty much directly to Tmail
- content_type
+Options passed pretty much directly to Mail
  to
  cc
  bcc
  from
+ body # the plain text body
+ html_body # for sending html-formatted email
  subject
- charset
+ charset # In case you need to send in utf-8 or similar
  attachments # see Attachments section above
  headers # see Custom headers section above
  message_id
 
 Other options
  via # :smtp or :sendmail, see Transport section above
- smtp # specify smtp info, see Transport section above
- tls # use tls, see TLS/SSL section above
+ via_options # specify transport options, see Transport section above
+
+== Help
+
+If you need help using Pony, or it looks like you've found a bug, we have a google group setup at: ponyrb@googlegroups.com.
 
 == External Dependencies
 
-tmail ~> 1.0
-mime-types >= 1.16
+mail > 2.0
 
-Note: these requirements are specified in the gemspec as well.  Also, you may need smtp_tls if you want to send via tls and are using ruby < 1.8.7
+Note: these requirements are specified in the gemspec as well.  Also, you may need smtp_tls if you want to send via tls/ssl and are using ruby < 1.8.7
 
 == Meta
 
@@ -95,9 +102,17 @@ Maintained by Ben Prew
 
 Written by Adam Wiggins
 
-Patches contributed by: Mathieu Martin, Arun Thampi, Thomas Hurst,
-Stephen Celis, Othmane Benkirane, Neil Mock, Hiroshi Saito, Jesse
-Cooke, Nickolas Means, and Rick Olson
+Patches contributed by:
+Arun Thampi,
+Hiroshi Saito,
+Jesse Cooke,
+Mathieu Martin,
+Neil Mock,
+Nickolas Means,
+Othmane Benkirane,
+Rick Olson
+Stephen Celis,
+Thomas Hurst,
 
 Released under the MIT License: http://www.opensource.org/licenses/mit-license.php
 
@@ -106,6 +121,9 @@ mailing list: ponyrb@googlegroups.com
 
 
 == Releases
+
+1.0
+* Convert to using Mail as the mail-generation backend, instead of TMail
 
 0.9.1
 * provide the ability to set custom mail headers with something like:

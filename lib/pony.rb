@@ -1,65 +1,92 @@
 require 'rubygems'
-require 'net/smtp'
-require 'mime/types'
-begin
-	require 'smtp_tls'
-rescue LoadError
-end
-require 'base64'
-begin
-	require 'tmail'
-rescue LoadError
-	require 'actionmailer'
-end
+require 'mail'
 
 module Pony
 	def self.mail(options)
 		raise(ArgumentError, ":to is required") unless options[:to]
 
-		via = options.delete(:via)
-		if via.nil?
-			transport build_tmail(options)
-		else
-			if via_options.include?(via.to_s)
-				send("transport_via_#{via}", build_tmail(options), options)
-			else
-				raise(ArgumentError, ":via must be either smtp or sendmail")
-			end
+		options[:via] = default_delivery_method unless options.has_key?(:via)
+		raise(ArgumentError, ":via must be either smtp or sendmail") unless via_possibilities.include?(options[:via])
+
+		options = cross_reference_depricated_fields(options)
+
+		if options.has_key?(:via) && options[:via] == :sendmail
+			options[:via_options] ||= {}
+			options[:via_options][:location] ||= sendmail_binary
 		end
+
+		deliver build_mail(options)
 	end
 
-	def self.build_tmail(options)
-		mail = TMail::Mail.new
-		mail.to = options[:to]
-		mail.cc = options[:cc]
-		mail.bcc = options[:bcc]
-		mail.from = options[:from] || 'pony@unknown'
-		mail.subject = options[:subject]
-		mail.message_id = options[:message_id]
-		if options[:attachments]
-			# If message has attachment, then body must be sent as a message part
-			# or it will not be interpreted correctly by client.
-			body = TMail::Mail.new
-			body.body = options[:body] || ""
-			body.content_type = options[:content_type] || "text/plain"
-			mail.parts.push body
-			(options[:attachments] || []).each do |name, body|
-				attachment = TMail::Mail.new
-				attachment.transfer_encoding = "base64"
-				attachment.body = Base64.encode64(body)
-				content_type = MIME::Types.type_for(name).to_s
-				attachment.content_type = content_type unless content_type == ""
-				attachment.set_content_disposition "attachment", "filename" => name
-				mail.parts.push attachment
-			end
-		else
-			mail.content_type = options[:content_type] || "text/plain"
-			mail.body = options[:body] || ""
+	def self.cross_reference_depricated_fields(options)
+		if options.has_key?(:smtp)
+			warn depricated_message(:smtp, :via_options)
+			options[:via_options] = options.delete(:smtp)
 		end
+
+		# cross-reference pony options to be compatible with keys mail expects
+		{ :host => :address, :user => :user_name, :auth => :authentication, :tls => :enable_starttls_auto }.each do |key, val|
+			if options[:via_options] && options[:via_options].has_key?(key)
+				warn depricated_message(key, val)
+				options[:via_options][val] = options[:via_options].delete(key)
+			end
+		end
+
+		if options[:content_type] && options[:content_type] =~ /html/ && !options[:html_body]
+			warn depricated_message(:content_type, :html_body)
+			options[:html_body] = options[:body]
+		end
+
+		return options
+	end
+
+	def self.deliver(mail)
+		mail.deliver!
+	end
+
+	def self.default_delivery_method
+		File.executable?(sendmail_binary) ? :sendmail : :smtp
+	end
+
+	def self.build_mail(options)
+		mail = Mail.new do
+			to options[:to]
+			from options[:from] || 'pony@unknown'
+			cc options[:cc]
+			bcc options[:bcc]
+			subject options[:subject]
+			date options[:date] || Time.now
+			message_id options[:message_id]
+
+			if options[:html_body]
+				html_part do
+					body options[:html_body]
+				end
+			end
+
+			# If we're using attachments, the body needs to be a separate part. If not,
+                        # we can just set the body directly.
+			if options[:body] && (options[:html_body] || options[:attachments])
+				text_part do
+					body options[:body]
+				end
+			elsif options[:body]
+				body options[:body]
+			end
+
+			delivery_method options[:via], (options.has_key?(:via_options) ? options[:via_options] : {})
+                end
+
+		(options[:attachments] || []).each do |name, body|
+			mail.attachments[name] = body
+		end
+
 		(options[:headers] ||= {}).each do |key, value|
 			mail[key] = value
 		end
-		mail.charset = options[:charset] # charset must be set after setting content_type
+
+		mail.charset = options[:charset] if options[:charset] # charset must be set after setting content_type
+
 		mail
 	end
 
@@ -68,42 +95,13 @@ module Pony
 		sendmail.empty? ? '/usr/sbin/sendmail' : sendmail
 	end
 
-	def self.transport(tmail)
-		if File.executable? sendmail_binary
-			transport_via_sendmail(tmail)
-		else
-			transport_via_smtp(tmail)
-		end
+	def self.via_possibilities
+		%w(sendmail smtp).map{ |x| x.to_sym }
 	end
 
-	def self.via_options
-		%w(sendmail smtp)
-	end
-
-	def self.transport_via_sendmail(tmail, options={})
-		IO.popen('-', 'w+') do |pipe|
-			if pipe
-				pipe.write(tmail.to_s)
-			else
-				exec(sendmail_binary, "-t")
-			end
-		end
-	end
-
-	def self.transport_via_smtp(tmail, options={:smtp => {}})
-		default_options = {:smtp => { :host => 'localhost', :port => '25', :domain => 'localhost.localdomain' }}
-		o = default_options[:smtp].merge(options[:smtp])
-		smtp = Net::SMTP.new(o[:host], o[:port])
-		if o[:tls]
-			raise "You may need: gem install smtp_tls" unless smtp.respond_to?(:enable_starttls)
-			smtp.enable_starttls
-		end
-		if o.include?(:auth)
-			smtp.start(o[:domain], o[:user], o[:password], o[:auth])
-		else
-			smtp.start(o[:domain])
-		end
-		smtp.send_message tmail.to_s, tmail.from, tmail.destinations
-		smtp.finish
+	def self.depricated_message(method, alternative)
+		warning_message = "warning: '#{method}' is deprecated"
+		warning_message += "; use '#{alternative}' instead." if alternative
+		return warning_message
 	end
 end
