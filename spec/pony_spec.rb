@@ -95,6 +95,11 @@ describe Pony do
 			Pony.build_mail(:body => 'What do you know, Joe?').body.should == 'What do you know, Joe?'
 		end
 
+		it "html_body" do
+			Pony.build_mail(:html_body => 'What do you know, Joe?').parts.first.body.should == 'What do you know, Joe?'
+			Pony.build_mail(:html_body => 'What do you know, Joe?').parts.first.content_type.should == 'text/html; charset=UTF-8'
+		end
+
 		it "date" do
 			now = Time.now
 			Pony.build_mail(:date => now).date.should == DateTime.parse(now.to_s)

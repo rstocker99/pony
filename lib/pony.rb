@@ -61,6 +61,7 @@ module Pony
 
 			if options[:html_body]
 				html_part do
+					content_type 'text/html; charset=UTF-8'
 					body options[:html_body]
 				end
 			end
