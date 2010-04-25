@@ -113,6 +113,7 @@ Othmane Benkirane,
 Rick Olson
 Stephen Celis,
 Thomas Hurst,
+Kalin Harvey
 
 Released under the MIT License: http://www.opensource.org/licenses/mit-license.php
 
@@ -131,7 +132,7 @@ mailing list: ponyrb@googlegroups.com
 * provide the ability to set the Message-Id from Pony.mail
 
 0.9
-* merge in kalins fixes to use tmail.destinations instead of trying to parse tmail.to, tmail.cc and tmail.bcc.  New specs to test functionality
+* merge in kalin's fixes to use tmail.destinations instead of trying to parse tmail.to, tmail.cc and tmail.bcc.  New specs to test functionality
 
 0.8
 * Fix bug that was allowing nil :bcc and :cc options to be passed to smtp
