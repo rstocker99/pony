@@ -79,8 +79,8 @@ describe Pony do
 		end
 
 		it "default charset" do
-			Pony.build_mail(:body => 'body').charset.should == nil
-			Pony.build_mail(:body => 'body', :content_type => 'text/html').charset.should == nil
+			Pony.build_mail(:body => 'body').charset.should == 'UTF-8'
+			Pony.build_mail(:body => 'body', :content_type => 'text/html').charset.should == 'UTF-8'
 		end
 
 		it "from (default)" do
@@ -115,20 +115,29 @@ describe Pony do
 
 		it "utf-8 encoded subject line" do
 			mail = Pony.build_mail(:to => 'btp@foo', :subject => 'Café', :body => 'body body body')
-			mail['subject'].encoded.should == "Subject: =?UTF8?B?Q2Fmw6k=?=\r\n"
+			mail['subject'].encoded.should =~ /^Subject: =\?UTF-8/;
 		end
 
 		it "attachments" do
 			mail = Pony.build_mail(:attachments => {"foo.txt" => "content of foo.txt"}, :body => 'test')
 			mail.parts.length.should == 2
-			mail.parts[0].to_s.should =~ /Content-Type: text\/plain/
+			mail.parts.first.to_s.should =~ /Content-Type: text\/plain/
 		end
 
 		it "suggests mime-type" do
 			mail = Pony.build_mail(:attachments => {"foo.pdf" => "content of foo.pdf"})
 			mail.parts.length.should == 1
-			mail.parts[0].to_s.should =~ /Content-Type: application\/pdf/
-			mail.parts[0].to_s.should =~ /filename=foo.pdf/
+			mail.parts.first.to_s.should =~ /Content-Type: application\/pdf/
+			mail.parts.first.to_s.should =~ /filename=foo.pdf/
+			mail.parts.first.content_transfer_encoding.to_s.should == 'base64'
+		end
+
+		it "encodes xlsx files as base64" do
+			mail = Pony.build_mail(:attachments => {"foo.xlsx" => "content of foo.xlsx"})
+			mail.parts.length.should == 1
+			mail.parts.first.to_s.should =~ /Content-Type: application\/vnd.openxmlformats-officedocument.spreadsheetml.sheet/
+			mail.parts.first.to_s.should =~ /filename=foo.xlsx/
+			mail.parts.first.content_transfer_encoding.to_s.should == 'base64'
 		end
 
 		it "passes cc and bcc as the list of recipients" do

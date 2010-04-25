@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'mail'
+require 'base64'
 
 module Pony
 	def self.mail(options)
@@ -78,7 +79,15 @@ module Pony
                 end
 
 		(options[:attachments] || []).each do |name, body|
-			mail.attachments[name] = body
+			# mime-types wants to send these as "quoted-printable"
+			if name =~ /\.xlsx$/
+				mail.attachments[name] = {
+					:content => Base64.encode64(body),
+					:transfer_encoding => :base64
+				}
+			else
+				mail.attachments[name] = body
+			end
 		end
 
 		(options[:headers] ||= {}).each do |key, value|
