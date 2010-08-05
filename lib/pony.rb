@@ -85,6 +85,7 @@ require 'base64'
 #  attachments # see Attachments section above
 #  headers # see Custom headers section above
 #  message_id
+#  sender  # Sets "envelope from" (and the Sender header)
 # 
 # Other options
 #  via # :smtp or :sendmail, see Transport section above
@@ -155,6 +156,7 @@ module Pony
 			subject options[:subject]
 			date options[:date] || Time.now
 			message_id options[:message_id]
+			sender options[:sender] if options[:sender]
 
 			if options[:html_body]
 				html_part do

@@ -118,6 +118,10 @@ describe Pony do
 			Pony.build_mail(:headers => {"List-ID" => "<abc@def.com>"})['List-ID'].to_s.should == '<abc@def.com>'
 		end
 
+		it "sender" do
+			Pony.build_mail(:sender => "abc@def.com")['Sender'].to_s.should == 'abc@def.com'
+		end
+
 		it "utf-8 encoded subject line" do
 			mail = Pony.build_mail(:to => 'btp@foo', :subject => 'Café', :body => 'body body body')
 			mail['subject'].encoded.should =~ /^Subject: =\?UTF-8/;
