@@ -81,6 +81,7 @@ Options passed pretty much directly to Mail
  attachments # see Attachments section above
  headers # see Custom headers section above
  message_id
+ sender
 
 Other options
  via # :smtp or :sendmail, see Transport section above
