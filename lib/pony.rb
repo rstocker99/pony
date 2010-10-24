@@ -95,11 +95,18 @@ require 'base64'
 
 module Pony
 
+	@@options = {}
+
+	def self.options=(value)
+		@@options = value 
+	end
+
 # Send an email
 #   Pony.mail(:to => 'you@example.com', :from => 'me@example.com', :subject => 'hi', :body => 'Hello there.')
 #   Pony.mail(:to => 'you@example.com', :html_body => '<h1>Hello there!</h1>', :body => "In case you can't read html, Hello there.")
 #   Pony.mail(:to => 'you@example.com', :cc => 'him@example.com', :from => 'me@example.com', :subject => 'hi', :body => 'Howsit!')
 	def self.mail(options)
+		options = @@options.merge options
 		raise(ArgumentError, ":to is required") unless options[:to]
 
 		options[:via] = default_delivery_method unless options.has_key?(:via)
