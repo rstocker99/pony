@@ -213,16 +213,16 @@ describe Pony do
 	end
 
 	describe "default options" do
-		it "should use default options " do
-			Pony.options = { :from => 'noreply@pony', :via => :smtp }
-			mail = Pony.build_mail(:to => "foo@bar")
-			mail.delivery_method.kind_of?(Mail::SMTP).should == true
+		it "should use default options" do
+			Pony.should_receive(:build_mail).with(hash_including(:from => 'noreply@pony'))
+			Pony.options = { :from => 'noreply@pony' }
+			Pony.mail(:to => 'foo@bar')
 		end
 
 		it "should merge default options with options" do
-			Pony.options = { :from => 'noreply@pony', :via => :smtp }
-			mail = Pony.build_mail(:from => 'override@pony', :to => "foo@bar")
-			mail.from.should == ['override@pony']
+			Pony.should_receive(:build_mail).with(hash_including(:from => 'override@pony'))
+			Pony.options = { :from => 'noreply@pony' }
+			Pony.mail(:from => 'override@pony', :to => "foo@bar")
 		end
 
 		it "should return the default options" do
