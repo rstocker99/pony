@@ -224,6 +224,13 @@ describe Pony do
 			mail = Pony.build_mail(:from => 'override@pony', :to => "foo@bar")
 			mail.from.should == ['override@pony']
 		end
+
+		it "should return the default options" do
+			input = { :from => 'noreply@pony' }
+			Pony.options = input
+			output = Pony.options
+			output.should == input
+		end
 	end
 
 end

@@ -101,6 +101,10 @@ module Pony
 		@@options = value 
 	end
 
+	def self.options()
+		@@options
+	end
+
 # Send an email
 #   Pony.mail(:to => 'you@example.com', :from => 'me@example.com', :subject => 'hi', :body => 'Hello there.')
 #   Pony.mail(:to => 'you@example.com', :html_body => '<h1>Hello there!</h1>', :body => "In case you can't read html, Hello there.")
