@@ -123,6 +123,7 @@ Rick Olson
 Stephen Celis,
 Thomas Hurst,
 Kalin Harvey
+Carl Hörberg
 
 Released under the MIT License: http://www.opensource.org/licenses/mit-license.php
 
