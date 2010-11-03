@@ -27,7 +27,7 @@ describe Pony do
 
 	it "should handle depricated options gracefully" do
 		Pony.should_receive(:build_mail).with(hash_including(:via_options => {:address => 'test'}))
-		Pony.mail(:to => 'foo@bar', :smtp => { :host => 'test' })
+		Pony.mail(:to => 'foo@bar', :smtp => { :host => 'test' }, :via => :smtp)
 	end
 
 	it "should handle depricated content-type gracefully" do

@@ -2,7 +2,7 @@ require 'rubygems'
 require 'mail'
 require 'base64'
 
-# = Pony, the express way to send email in Ruby
+# = The express way to send email in Ruby
 # 
 # == Overview
 # 
@@ -90,13 +90,25 @@ require 'base64'
 # Other options
 #  via # :smtp or :sendmail, see Transport section above
 #  via_options # specify transport options, see Transport section above
-
+#
+# == Set default options 
+# 
+# Default options can be set so that they don't have to be repeated. The default options you set will be overriden by any options you pass in to Pony.mail()
+# 
+#   Pony.options = { :from => 'noreply@example.com', :via => :smtp, :via_options => { :host => 'smtp.yourserver.com' } }
+#   Pony.mail(:to => 'foo@bar') # Sends mail to foo@bar from noreply@example.com using smtp 
+#   Pony.mail(:from => 'pony@example.com', :to => 'foo@bar') # Sends mail to foo@bar from pony@example.com using smtp
 
 
 module Pony
 
 	@@options = {}
 
+# Default options can be set so that they don't have to be repeated.
+# 
+#   Pony.options = { :from => 'noreply@example.com', :via => :smtp, :via_options => { :host => 'smtp.yourserver.com' } }
+#   Pony.mail(:to => 'foo@bar') # Sends mail to foo@bar from noreply@example.com using smtp 
+#   Pony.mail(:from => 'pony@example.com', :to => 'foo@bar') # Sends mail to foo@bar from pony@example.com using smtp
 	def self.options=(value)
 		@@options = value 
 	end

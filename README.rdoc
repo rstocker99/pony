@@ -132,6 +132,9 @@ mailing list: ponyrb@googlegroups.com
 
 == Releases
 
+1.1
+* Add default options
+
 1.0
 * Convert to using Mail as the mail-generation backend, instead of TMail
 
