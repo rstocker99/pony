@@ -126,7 +126,6 @@ module Pony
     raise(ArgumentError, ":to is required") unless options[:to]
 
     options[:via] = default_delivery_method unless options.has_key?(:via)
-    raise(ArgumentError, ":via must be either smtp or sendmail") unless via_possibilities.include?(options[:via])
 
     options = cross_reference_depricated_fields(options)
 
@@ -226,10 +225,6 @@ module Pony
   def self.sendmail_binary
     sendmail = `which sendmail`.chomp
     sendmail.empty? ? '/usr/sbin/sendmail' : sendmail
-  end
-
-  def self.via_possibilities
-    %w(sendmail smtp).map{ |x| x.to_sym }
   end
 
   def self.depricated_message(method, alternative)

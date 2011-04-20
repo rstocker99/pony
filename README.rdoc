@@ -133,6 +133,10 @@ mailing list: ponyrb@googlegroups.com
 
 == Releases
 
+1.2
+* Remove limitations on :via, and let mail handle it (this means you can say things like :via => test)
+* Add reply-to option and a bundler file
+
 1.1
 * Add default options
 

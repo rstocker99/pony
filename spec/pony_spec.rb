@@ -197,17 +197,7 @@ describe Pony do
       mail.delivery_method.kind_of?(Mail::SMTP).should == true
     end
 
-    it "should raise an error if via is neither smtp nor sendmail" do
-      lambda { Pony.mail(:to => 'joe@plumber.com', :via => :pigeon) }.should raise_error(ArgumentError)
-    end
   end
-
-  describe "via_possibilities" do
-    it "should contain smtp and sendmail" do
-      Pony.via_possibilities.should == [:sendmail, :smtp]
-    end
-  end
-
 
   describe "sendmail binary location" do
     it "should default to /usr/sbin/sendmail if not in path" do
