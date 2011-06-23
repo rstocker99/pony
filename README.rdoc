@@ -78,6 +78,7 @@ Options passed pretty much directly to Mail
  html_body # for sending html-formatted email
  subject
  charset # In case you need to send in utf-8 or similar
+ text_part_charset # for multipart messages, set the charset of the text part
  attachments # see Attachments section above
  headers # see Custom headers section above
  message_id
@@ -132,6 +133,9 @@ mailing list: ponyrb@googlegroups.com
 
 
 == Releases
+
+1.3
+* Add new option :text_part_charset, which allows you to specify the charset for the text portion
 
 1.2
 * Remove limitations on :via, and let mail handle it (this means you can say things like :via => test)
