@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{pony}
-  s.version = "1.2"
+  s.version = "1.3"
 
   s.description = "Send email in one command: Pony.mail(:to => 'someone@example.com', :body => 'hello')"
   s.summary = s.description
