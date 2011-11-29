@@ -2,30 +2,30 @@ require 'mail'
 require 'base64'
 
 # = The express way to send email in Ruby
-# 
+#
 # == Overview
-# 
+#
 # Ruby no longer has to be jealous of PHP's mail() function, which can send an email in a single command.
-# 
+#
 #   Pony.mail(:to => 'you@example.com', :from => 'me@example.com', :subject => 'hi', :body => 'Hello there.')
 #   Pony.mail(:to => 'you@example.com', :html_body => '<h1>Hello there!</h1>', :body => "In case you can't read html, Hello there.")
 #   Pony.mail(:to => 'you@example.com', :cc => 'him@example.com', :from => 'me@example.com', :subject => 'hi', :body => 'Howsit!')
-# 
+#
 # Any option key may be omitted except for :to. For a complete list of options, see List Of Options section below.
-# 
-# 
+#
+#
 # == Transport
-# 
+#
 # Pony uses /usr/sbin/sendmail to send mail if it is available, otherwise it uses SMTP to localhost.
-# 
+#
 # This can be over-ridden if you specify a via option:
-# 
+#
 #   Pony.mail(:to => 'you@example.com', :via => :smtp) # sends via SMTP
-#   
+#
 #   Pony.mail(:to => 'you@example.com', :via => :sendmail) # sends via sendmail
-# 
+#
 # You can also specify options for SMTP:
-# 
+#
 #   Pony.mail(:to => 'you@example.com', :via => :smtp, :via_options => {
 #     :address        => 'smtp.yourserver.com',
 #     :port           => '25',
@@ -34,9 +34,9 @@ require 'base64'
 #     :authentication => :plain, # :plain, :login, :cram_md5, no auth by default
 #     :domain         => "localhost.localdomain" # the HELO domain provided by the client to the server
 #   }
-# 
+#
 # Gmail example (with TLS/SSL)
-# 
+#
 #   Pony.mail(:to => 'you@example.com', :via => :smtp, :via_options => {
 #     :address              => 'smtp.gmail.com',
 #     :port                 => '587',
@@ -46,32 +46,32 @@ require 'base64'
 #     :authentication       => :plain, # :plain, :login, :cram_md5, no auth by default
 #     :domain               => "localhost.localdomain" # the HELO domain provided by the client to the server
 #   })
-# 
+#
 # And options for Sendmail:
-# 
+#
 #   Pony.mail(:to => 'you@example.com', :via => :smtp, :via_options => {
 #     :location  => '/path/to/sendmail' # this defaults to 'which sendmail' or '/usr/sbin/sendmail' if 'which' fails
 #     :arguments => '-t' # -t and -i are the defaults
 #   }
-# 
+#
 # == Attachments
-# 
+#
 # You can attach a file or two with the :attachments option:
-# 
+#
 #   Pony.mail(..., :attachments => {"foo.zip" => File.read("path/to/foo.zip"), "hello.txt" => "hello!"})
-# 
+#
 # Note: An attachment's mime-type is set based on the filename (as dictated by the ruby gem mime-types).  So 'foo.pdf' has a mime-type of 'application/pdf'
-# 
+#
 # == Custom Headers
-# 
+#
 # Pony allows you to specify custom mail headers
 #   Pony.mail(
-#     :to => 'me@example.com', 
+#     :to => 'me@example.com',
 #     :headers => { "List-ID" => "...", "X-My-Custom-Header" => "what a cool custom header" }
 #   )
-# 
+#
 # == List Of Options
-# 
+#
 # Options passed pretty much directly to Mail
 #  to
 #  cc
@@ -81,21 +81,23 @@ require 'base64'
 #  html_body # for sending html-formatted email
 #  subject
 #  charset # In case you need to send in utf-8 or similar
+#  text_part_charset # for multipart messages, set the charset of the text part
 #  attachments # see Attachments section above
 #  headers # see Custom headers section above
 #  message_id
 #  sender  # Sets "envelope from" (and the Sender header)
-# 
+#  reply_to
+#
 # Other options
 #  via # :smtp or :sendmail, see Transport section above
 #  via_options # specify transport options, see Transport section above
 #
-# == Set default options 
-# 
+# == Set default options
+#
 # Default options can be set so that they don't have to be repeated. The default options you set will be overriden by any options you pass in to Pony.mail()
-# 
+#
 #   Pony.options = { :from => 'noreply@example.com', :via => :smtp, :via_options => { :host => 'smtp.yourserver.com' } }
-#   Pony.mail(:to => 'foo@bar') # Sends mail to foo@bar from noreply@example.com using smtp 
+#   Pony.mail(:to => 'foo@bar') # Sends mail to foo@bar from noreply@example.com using smtp
 #   Pony.mail(:from => 'pony@example.com', :to => 'foo@bar') # Sends mail to foo@bar from pony@example.com using smtp
 
 
@@ -104,12 +106,12 @@ module Pony
   @@options = {}
 
 # Default options can be set so that they don't have to be repeated.
-# 
+#
 #   Pony.options = { :from => 'noreply@example.com', :via => :smtp, :via_options => { :host => 'smtp.yourserver.com' } }
-#   Pony.mail(:to => 'foo@bar') # Sends mail to foo@bar from noreply@example.com using smtp 
+#   Pony.mail(:to => 'foo@bar') # Sends mail to foo@bar from noreply@example.com using smtp
 #   Pony.mail(:from => 'pony@example.com', :to => 'foo@bar') # Sends mail to foo@bar from pony@example.com using smtp
   def self.options=(value)
-    @@options = value 
+    @@options = value
   end
 
   def self.options()

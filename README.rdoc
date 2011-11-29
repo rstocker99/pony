@@ -18,7 +18,7 @@ Pony uses /usr/sbin/sendmail to send mail if it is available, otherwise it uses 
 This can be over-ridden if you specify a via option:
 
   Pony.mail(:to => 'you@example.com', :via => :smtp) # sends via SMTP
-  
+
   Pony.mail(:to => 'you@example.com', :via => :sendmail) # sends via sendmail
 
 You can also specify options for SMTP:
@@ -63,7 +63,7 @@ Note: An attachment's mime-type is set based on the filename (as dictated by the
 
 Pony allows you to specify custom mail headers
   Pony.mail(
-    :to => 'me@example.com', 
+    :to => 'me@example.com',
     :headers => { "List-ID" => "...", "X-My-Custom-Header" => "what a cool custom header" }
   )
 
@@ -82,18 +82,19 @@ Options passed pretty much directly to Mail
  attachments # see Attachments section above
  headers # see Custom headers section above
  message_id
- sender
+ sender  # Sets "envelope from" (and the Sender header)
+ reply_to
 
 Other options
  via # :smtp or :sendmail, see Transport section above
  via_options # specify transport options, see Transport section above
 
-== Set default options 
+== Set default options
 
 Default options can be set so that they don't have to be repeated. The default options you set will be overriden by any options you pass in to Pony.mail()
 
   Pony.options = { :from => 'noreply@example.com', :via => :smtp, :via_options => { :host => 'smtp.yourserver.com' } }
-  Pony.mail(:to => 'foo@bar') # Sends mail to foo@bar from noreply@example.com using smtp 
+  Pony.mail(:to => 'foo@bar') # Sends mail to foo@bar from noreply@example.com using smtp
   Pony.mail(:from => 'pony@example.com', :to => 'foo@bar') # Sends mail to foo@bar from pony@example.com using smtp
 
 == Help
@@ -133,6 +134,9 @@ mailing list: ponyrb@googlegroups.com
 
 
 == Releases
+
+1.4
+* Updated docs
 
 1.3
 * Add new option :text_part_charset, which allows you to specify the charset for the text portion
