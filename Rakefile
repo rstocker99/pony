@@ -12,10 +12,11 @@ task :default => :spec
 require 'rake'
 require 'rake/testtask'
 require 'rake/clean'
-require 'rake/gempackagetask'
+require 'rubygems'
+require 'rubygems/package_task'
 require 'fileutils'
 
-Rake::GemPackageTask.new(eval File.read('pony.gemspec')) do |p|
+Gem::PackageTask.new(eval File.read('pony.gemspec')) do |p|
 	p.need_tar = true if RUBY_PLATFORM !~ /mswin/
 end
 
