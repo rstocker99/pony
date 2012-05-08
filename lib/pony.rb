@@ -49,7 +49,7 @@ require 'base64'
 #
 # And options for Sendmail:
 #
-#   Pony.mail(:to => 'you@example.com', :via => :smtp, :via_options => {
+#   Pony.mail(:to => 'you@example.com', :via => :sendmail, :via_options => {
 #     :location  => '/path/to/sendmail' # this defaults to 'which sendmail' or '/usr/sbin/sendmail' if 'which' fails
 #     :arguments => '-t' # -t and -i are the defaults
 #   }
